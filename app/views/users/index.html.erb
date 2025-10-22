@@ -1,4 +1,61 @@
-<div>
-  <h1 class="font-bold text-4xl">Users#index</h1>
-  <p>Find me in app/views/users/index.html.erb</p>
+<div class="w-full flex flex-col items-center">
+
+  <!-- Page Header -->
+  <div class="text-center mb-6">
+    <h1 class="text-3xl font-semibold text-gray-900">Users</h1>
+    <p class="text-gray-600">
+      Manage team members in <span class="text-blue-600 font-medium"><%= current_account.name %></span>
+    </p>
+  </div>
+
+  <!-- Users Card -->
+  <div class="w-full max-w-5xl bg-white rounded-xl shadow border border-gray-200 p-6">
+
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold text-gray-800">Team Members</h2>
+      <%= link_to "Add User", new_account_user_path, class: "px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 text-sm shadow" %>
+    </div>
+
+    <div class="overflow-x-auto rounded-lg border border-gray-200">
+      <table class="w-full text-sm text-left text-gray-600">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-100 border-b">
+          <tr>
+            <th class="px-6 py-3">Name</th>
+            <th class="px-6 py-3">Email</th>
+            <th class="px-6 py-3">Status</th>
+            <th class="px-6 py-3">Role</th>
+            <th class="px-6 py-3">Added</th>
+            <th class="px-6 py-3 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr class="bg-white border-b hover:bg-gray-50 transition">
+              <td class="px-6 py-4 font-medium text-gray-900"><%= user.name %></td>
+              <td class="px-6 py-4"><%= user.email %></td>
+              <td class="px-6 py-4">
+                <% if user.accepted_or_not_invited? %>
+                  <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Active</span>
+                <% else %>
+                  <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded-full">Invited</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4"><%= user.roles&.first&.name&.capitalize %></td>
+              <td class="px-6 py-4"><%= user.created_at.strftime('%b %d, %Y') %></td>
+              <td class="px-6 py-4 text-right space-x-2">
+                <%= link_to "Edit", edit_account_user_path(user), class: "px-3 py-1 border border-blue-600 text-blue-700 rounded hover:bg-blue-600 hover:text-white transition text-sm" %>
+                <% unless user == current_user %>
+                  <%= link_to "Delete", account_user_path(user),
+                      method: :delete,
+                      data: { confirm: "Are you sure?" },
+                      class: "px-3 py-1 border border-red-600 text-red-700 rounded hover:bg-red-600 hover:text-white transition text-sm" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
 </div>
